@@ -91,7 +91,7 @@ class Txt2EpubGUI(QWidget):
 
     def generate_epub(self):
         if self.file_path:
-            if self.file_path.is_file() is True:
+            if self.file_path.with_suffix(".epub").is_file() is True:
                 reply = QMessageBox.question(
                     self,
                     "Overwrite?",
