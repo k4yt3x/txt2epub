@@ -1,0 +1,38 @@
+[project]
+name = "txt2epub"
+description = "A simple TXT to ePub converter"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "GPL-2.0-only" }
+keywords = [
+  "ebook",
+]
+authors = [{ name = "K4YT3X", email = "i@k4yt3x.com" }]
+classifiers = [
+  "Environment :: Console",
+  "Environment :: X11 Applications :: Qt",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "langdetect>=1.0.0",
+    "ebooklib>=0.18",
+]
+dynamic = ["version"]
+
+[project.urls]
+homepage = "https://github.com/k4yt3x/txt2epub/"
+
+[project.scripts]
+txt2epub = "txt2epub:main"
+
+[tool.isort]
+profile = "black"
+
+[tool.pdm]
+version = { source = "file", path = "txt2epub/__init__.py" }
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
