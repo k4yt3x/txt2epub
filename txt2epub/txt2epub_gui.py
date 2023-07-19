@@ -77,12 +77,16 @@ class Txt2EpubGUI(QWidget):
         self.on_select(file_path)
 
     def on_select(self, file: str):
-        if file is not None:
+        file_path = pathlib.Path(file)
+        if file is not None and file_path.is_file():
             self.file_path = pathlib.Path(file)
             self.title_input.setText(self.file_path.stem)
             with self.file_path.open("r", encoding="utf-8") as txt_file:
                 text = txt_file.read()
-                self.language_input.setText(langdetect.detect(text))
+                try:
+                    self.language_input.setText(langdetect.detect(text))
+                except langdetect.lang_detect_exception.LangDetectException:
+                    self.language_input.setText("en")
             self.label.setText(f"Selected file: {self.file_path.name}")
 
     def generate_epub(self):

@@ -28,7 +28,10 @@ class Txt2Epub:
         # read text from file
         with input_file.open("r", encoding="utf-8") as txt_file:
             text = txt_file.read()
-            book_language = self.book_language or langdetect.detect(text)
+            try:
+                book_language = self.book_language or langdetect.detect(text)
+            except langdetect.lang_detect_exception.LangDetectException:
+                book_language = "en"
 
         # split text into chapters
         chapters = text.split("\n\n\n")
