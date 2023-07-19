@@ -57,7 +57,7 @@ class Txt2Epub:
             chapter = epub.EpubHtml(
                 title=chapter_title,
                 file_name="chap_{:02d}.xhtml".format(chapter_id + 1),
-                lang=self.book_language,
+                lang=book_language,
             )
             chapter.content = "<h1>{}</h1>{}".format(
                 chapter_title,
@@ -72,6 +72,10 @@ class Txt2Epub:
         # update book spine and TOC
         book.spine = spine
         book.toc = toc
+
+        # add navigation files
+        book.add_item(epub.EpubNcx())
+        book.add_item(epub.EpubNav())
 
         # generate new file path if not specified
         if output_file is None:
