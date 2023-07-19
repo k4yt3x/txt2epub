@@ -98,11 +98,11 @@ class Txt2EpubGUI(QWidget):
                     book_language=self.language_input.text() or "en",
                 )
                 creator.create_epub(pathlib.Path(self.file_path))
-                self.label.setText(f"ePub generated for: {self.file_path}")
+                self.label.setText(f"ePub generated for: {self.file_path.name}")
                 QMessageBox.information(
                     self,
                     "Success",
-                    f"ePub generated for: {self.file_path.name}",
+                    f"ePub generated at: {self.file_path.with_suffix('.epub')}",
                 )
 
             except Exception as error:
