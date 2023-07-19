@@ -54,7 +54,9 @@ class Txt2EpubGUI(QWidget):
 
         layout.addLayout(form_layout)
 
-        self.label = QLabel("No file selected", self)
+        self.label = QLabel(
+            "Drop a file here or select a file using the button below", self
+        )
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.label)
 
@@ -125,7 +127,9 @@ class Txt2EpubGUI(QWidget):
                     f"Error generating ePub: {error}",
                 )
         else:
-            self.label.setText("No file selected")
+            self.label.setText(
+                "Drop a file here or select a file using the button below"
+            )
 
     # New functions to handle drag and drop
     def dragEnterEvent(self, event: QDragEnterEvent):
