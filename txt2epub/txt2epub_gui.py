@@ -91,6 +91,18 @@ class Txt2EpubGUI(QWidget):
 
     def generate_epub(self):
         if self.file_path:
+            if self.file_path.is_file() is True:
+                reply = QMessageBox.question(
+                    self,
+                    "Overwrite?",
+                    "The output file already exists. Overwrite?",
+                    QMessageBox.StandardButton.Yes,
+                    QMessageBox.StandardButton.No,
+                )
+
+                if reply == QMessageBox.StandardButton.No:
+                    return
+
             try:
                 creator = Txt2Epub(
                     book_title=self.title_input.text() or "Default Title",
