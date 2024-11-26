@@ -19,6 +19,7 @@ dependencies = [
     "langdetect>=1.0.0",
     "ebooklib>=0.18",
     "PyQt6>=6.5.0",
+    "rich-click>=1.8.4",
 ]
 dynamic = ["version"]
 
