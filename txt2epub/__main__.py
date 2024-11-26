@@ -6,8 +6,8 @@ import sys
 from PyQt6.QtWidgets import QApplication
 import rich_click as click
 
-from txt2epub import Txt2Epub
-from txt2epub_gui import Txt2EpubGUI
+from .txt2epub import Txt2Epub
+from .txt2epub_gui import Txt2EpubGUI
 
 
 @click.group()
