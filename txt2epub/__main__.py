@@ -1,55 +1,91 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import argparse
 import pathlib
 import sys
 
 from PyQt6.QtWidgets import QApplication
+import rich_click as click
 
-from .txt2epub import Txt2Epub
-from .txt2epub_gui import Txt2EpubGUI
+from txt2epub import Txt2Epub
+from txt2epub_gui import Txt2EpubGUI
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(
-        prog="txt2epub",
-        description="Convert a txt file to an epub file or launch the GUI.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+@click.group()
+def main():
+    """Convert a txt file to an ePub file or launch the GUI.
+
+    Examples:
+
+    txt2epub convert -i input.txt -o output.epub
+
+    txt2epub gui
+    """
+    pass
+
+
+@main.command()
+@click.option(
+    "-i",
+    "--input",
+    type=click.Path(exists=True, path_type=pathlib.Path),
+    required=True,
+    help="Path to the input txt file.",
+)
+@click.option(
+    "-o",
+    "--output",
+    type=click.Path(path_type=pathlib.Path),
+    required=False,
+    help="Path to the output ePub file. Defaults to the input file name with the .epub extension.",
+)
+@click.option(
+    "-t",
+    "--title",
+    type=str,
+    required=False,
+    help="Title of the book. Defaults to the file name.",
+)
+@click.option(
+    "-a",
+    "--author",
+    type=str,
+    required=False,
+    help="Author of the book. Defaults to 'Unknown'.",
+)
+@click.option(
+    "-l",
+    "--language",
+    type=str,
+    required=False,
+    help="Language of the book. Auto-detected by default.",
+)
+def convert(
+    input: pathlib.Path,
+    output: pathlib.Path | None,
+    title: str | None,
+    author: str | None,
+    language: str | None,
+):
+    """Convert a txt file to an ePub file.
+
+    Example:
+
+    txt2epub convert -i input.txt -o output.epub -t "My Book" -a "Me"
+    """
+    if not output:
+        output = input.with_suffix(".epub")
+    creator = Txt2Epub(
+        book_title=title,
+        book_author=author,
+        book_language=language or "en",
     )
+    creator.create_epub(input, output)
 
-    subparsers = parser.add_subparsers(help="Sub-commands", dest="command")
 
-    convert_parser = subparsers.add_parser(
-        "convert", help="convert a txt file to an epub file"
-    )
-    convert_parser.add_argument(
-        "-i",
-        "--input",
-        type=pathlib.Path,
-        help="Path to the input txt file",
-        required=True,
-    )
-    convert_parser.add_argument(
-        "-o",
-        "--output",
-        type=pathlib.Path,
-        help="Path to the output ePub file",
-    )
-
-    subparsers.add_parser("gui", help="launch the GUI")
-
-    args = parser.parse_args()
-
-    if args.command == "convert":
-        creator = Txt2Epub()
-        creator.create_epub(args.input, args.output)
-    elif args.command == "gui":
-        launch_gui()
-    else:
-        parser.print_help()
-        return 1
-
-    return 0
+@main.command()
+def gui():
+    """Launch the GUI."""
+    launch_gui()
 
 
 def launch_gui():
@@ -60,4 +96,4 @@ def launch_gui():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
