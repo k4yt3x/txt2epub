@@ -21,7 +21,7 @@ pip install txt2epub
 You may convert a file from the command line:
 
 ```shell
-txt2epub convert -i <input> -o <output>
+txt2epub convert -i <input> -o <output> -a <author> -t <title> -l <language>
 ```
 
 ...or using the GUI:
