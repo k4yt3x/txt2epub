@@ -19,7 +19,7 @@ pip install txt2epub
 您可以直接在命令行里运行：
 
 ```shell
-txt2epub convert -i <input> -o <output>
+txt2epub convert -i <输入文件> -o <输出文件> -t <书名> -a <作者> -l <语言>
 ```
 
 ……或者运行图形化界面：
@@ -32,7 +32,7 @@ txt2epub gui
 
 该程序按照标准的 TXT 书籍格式检测书籍的章节和章节标题：
 
-- 章节之间由两个空行（即，`\n\n\n`）分隔
+- 章节之间由三个 LF 换行符（即，`\n\n\n`）分隔
 - 新章节的第一行是章节的标题。
 
 例如，在下面的文本中，有两个章节，标题分别为 "Chapter 1" 和 "Chapter 2"。
