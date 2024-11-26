@@ -85,10 +85,6 @@ def convert(
 @main.command()
 def gui():
     """Launch the GUI."""
-    launch_gui()
-
-
-def launch_gui():
     app = QApplication(sys.argv)
     ex = Txt2EpubGUI()
     ex.show()
