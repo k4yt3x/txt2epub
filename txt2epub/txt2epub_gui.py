@@ -4,13 +4,11 @@ import pathlib
 import traceback
 
 import langdetect
-from PyQt6.QtCore import QMimeData, Qt
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QDragEnterEvent, QDropEvent
 from PyQt6.QtWidgets import (
-    QApplication,
     QFileDialog,
     QFormLayout,
-    QHBoxLayout,
     QLabel,
     QLineEdit,
     QMessageBox,
@@ -106,12 +104,12 @@ class Txt2EpubGUI(QWidget):
                     return
 
             try:
-                creator = Txt2Epub(
+                Txt2Epub.create_epub(
+                    input_file=pathlib.Path(self.file_path),
                     book_title=self.title_input.text() or "Default Title",
                     book_author=self.author_input.text() or "Unknown Author",
                     book_language=self.language_input.text() or "en",
                 )
-                creator.create_epub(pathlib.Path(self.file_path))
                 self.label.setText(f"ePub generated for: {self.file_path.name}")
                 QMessageBox.information(
                     self,

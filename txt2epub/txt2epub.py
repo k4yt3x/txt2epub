@@ -1,49 +1,49 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import argparse
 import pathlib
 import uuid
+from typing import Optional
 
 import langdetect
 from ebooklib import epub
 
 
 class Txt2Epub:
-    def __init__(
-        self,
-        book_identifier=None,
-        book_title=None,
-        book_author=None,
-        book_language="en",
+    @staticmethod
+    def create_epub(
+        input_file: pathlib.Path,
+        output_file: Optional[pathlib.Path] = None,
+        book_identifier: Optional[str] = None,
+        book_title: Optional[str] = None,
+        book_author: Optional[str] = None,
+        book_language: Optional[str] = None,
     ):
-        self.book_identifier = book_identifier or str(uuid.uuid4())
-        self.book_title = book_title
-        self.book_author = book_author
-        self.book_language = book_language
-
-    def create_epub(self, input_file: pathlib.Path, output_file: pathlib.Path = None):
-        # get the book title from the file name
-        book_title = self.book_title or input_file.stem
+        # generate fields if not specified
+        book_identifier = book_identifier or str(uuid.uuid4())
+        book_title = book_title or input_file.stem
+        book_author = book_author or "Unknown"
 
         # read text from file
         with input_file.open("r", encoding="utf-8") as txt_file:
-            text = txt_file.read()
+            book_text = txt_file.read()
+
+            # detect book language if not specified
             try:
-                book_language = self.book_language or langdetect.detect(text)
+                book_language = book_language or langdetect.detect(book_text)
             except langdetect.lang_detect_exception.LangDetectException:
                 book_language = "en"
 
         # split text into chapters
-        chapters = text.split("\n\n\n")
+        chapters = book_text.split("\n\n\n")
 
         # create new EPUB book
         book = epub.EpubBook()
 
-        # set metadata
-        book.set_identifier(self.book_identifier)
+        # set book metadata
+        book.set_identifier(book_identifier)
         book.set_title(book_title)
+        book.add_author(book_author)
         book.set_language(book_language)
-        book.add_author(self.book_author or "Unknown")
 
         # create chapters
         spine = ["nav"]
@@ -66,7 +66,7 @@ class Txt2Epub:
 
             # add chapter to the book and TOC
             book.add_item(chapter)
-            spine.append(chapter)
+            spine.append(str(chapter))
             toc.append(chapter)
 
         # update book spine and TOC
