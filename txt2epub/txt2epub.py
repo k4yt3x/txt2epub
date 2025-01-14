@@ -46,7 +46,7 @@ class Txt2Epub:
         book.set_language(book_language)
 
         # create chapters
-        spine = ["nav"]
+        spine: list[str | epub.EpubHtml] = ["nav"]
         toc = []
         for chapter_id, chapter_content_full in enumerate(chapters):
             chapter_lines = chapter_content_full.split("\n")
@@ -66,7 +66,7 @@ class Txt2Epub:
 
             # add chapter to the book and TOC
             book.add_item(chapter)
-            spine.append(str(chapter))
+            spine.append(chapter)
             toc.append(chapter)
 
         # update book spine and TOC
