@@ -5,12 +5,14 @@ import traceback
 
 import langdetect
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QDragEnterEvent, QDropEvent
+from PyQt6.QtGui import QDragEnterEvent, QDropEvent, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
+    QApplication,
     QFileDialog,
     QFormLayout,
     QLabel,
     QLineEdit,
+    QMainWindow,
     QMessageBox,
     QPushButton,
     QVBoxLayout,
@@ -20,7 +22,7 @@ from PyQt6.QtWidgets import (
 from .txt2epub import Txt2Epub
 
 
-class Txt2EpubGUI(QWidget):
+class Txt2EpubGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.title = "TXT2EPUB"
@@ -33,6 +35,10 @@ class Txt2EpubGUI(QWidget):
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(100, 100, 400, 250)
+
+        QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(
+            QApplication.instance().quit
+        )
 
         layout = QVBoxLayout()
 
@@ -68,7 +74,9 @@ class Txt2EpubGUI(QWidget):
         generate_epub_button.clicked.connect(self.generate_epub)
         layout.addWidget(generate_epub_button)
 
-        self.setLayout(layout)
+        central_widget = QWidget(self)
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
 
     def select_file(self):
         file_path, _ = QFileDialog.getOpenFileName(
