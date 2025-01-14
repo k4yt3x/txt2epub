@@ -66,7 +66,7 @@ class Txt2Epub:
 
             # add chapter to the book and TOC
             book.add_item(chapter)
-            spine.append(str(chapter))
+            spine.append(chapter)
             toc.append(chapter)
 
         # update book spine and TOC
