@@ -17,6 +17,7 @@ class Txt2Epub:
         book_title: Optional[str] = None,
         book_author: Optional[str] = None,
         book_language: Optional[str] = None,
+        book_cover: Optional[pathlib.Path] = None,
     ):
         # generate fields if not specified
         book_identifier = book_identifier or str(uuid.uuid4())
@@ -44,6 +45,7 @@ class Txt2Epub:
         book.set_title(book_title)
         book.add_author(book_author)
         book.set_language(book_language)
+        book.set_cover("cover.jpg", open(book_cover, "rb").read()) if book_cover else None
 
         # create chapters
         spine: list[str | epub.EpubHtml] = ["nav"]
