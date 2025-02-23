@@ -56,6 +56,12 @@ def main() -> int:
         "--identifier",
         help="Identifier of the book",
     )
+    convert_parser.add_argument(
+        "-c",
+        "--cover",
+        type=pathlib.Path,
+        help="Path to the cover image of the book",
+    )
 
     subparsers.add_parser("gui", help="launch the GUI")
 
@@ -69,6 +75,7 @@ def main() -> int:
             book_title=args.title,
             book_author=args.author,
             book_language=args.language,
+            book_cover=args.cover,
         )
     elif args.command == "gui":
         launch_gui()

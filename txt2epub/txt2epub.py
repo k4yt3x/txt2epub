@@ -7,6 +7,8 @@ from typing import Optional
 import langdetect
 from ebooklib import epub
 
+from .utils import convert_image_to_jpeg
+
 
 class Txt2Epub:
     @staticmethod
@@ -17,6 +19,7 @@ class Txt2Epub:
         book_title: Optional[str] = None,
         book_author: Optional[str] = None,
         book_language: Optional[str] = None,
+        book_cover: Optional[pathlib.Path] = None,
     ):
         # generate fields if not specified
         book_identifier = book_identifier or str(uuid.uuid4())
@@ -36,6 +39,11 @@ class Txt2Epub:
         # split text into chapters
         chapters = book_text.split("\n\n\n")
 
+        # convert cover image to JPEG
+        book_cover_jpeg = None
+        if book_cover is not None and book_cover != "":
+            book_cover_jpeg = convert_image_to_jpeg(book_cover)
+
         # create new EPUB book
         book = epub.EpubBook()
 
@@ -44,7 +52,7 @@ class Txt2Epub:
         book.set_title(book_title)
         book.add_author(book_author)
         book.set_language(book_language)
-
+        book.set_cover("cover.jpg", book_cover_jpeg)
         # create chapters
         spine: list[str | epub.EpubHtml] = ["nav"]
         toc = []

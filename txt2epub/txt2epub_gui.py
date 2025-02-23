@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
     QApplication,
     QFileDialog,
     QFormLayout,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
     QMainWindow,
@@ -55,6 +56,24 @@ class Txt2EpubGUI(QMainWindow):
         self.author_input = QLineEdit(self)
         self.author_input.setPlaceholderText("Enter author name")
         form_layout.addRow(QLabel("Author:", self), self.author_input)
+
+        self.cover_input = QLineEdit(self)
+        self.cover_input.setPlaceholderText("Enter cover image path")
+        self.cover_button = QPushButton("Select", self)
+        self.cover_button.clicked.connect(
+            lambda: self.cover_input.setText(
+                QFileDialog.getOpenFileName(
+                    self,
+                    "Select a cover image",
+                    "",
+                    "Images (*.png *.jpg *.jpeg);;All Files (*)",
+                )[0]
+            )
+        )
+        cover_layout = QHBoxLayout()
+        cover_layout.addWidget(self.cover_input)
+        cover_layout.addWidget(self.cover_button)
+        form_layout.addRow(QLabel("Cover Image:", self), cover_layout)
 
         layout.addLayout(form_layout)
 
@@ -117,6 +136,7 @@ class Txt2EpubGUI(QMainWindow):
                     book_title=self.title_input.text() or "Default Title",
                     book_author=self.author_input.text() or "Unknown Author",
                     book_language=self.language_input.text() or "en",
+                    book_cover=pathlib.Path(self.cover_input.text()),
                 )
                 self.label.setText(f"ePub generated for: {self.file_path.name}")
                 QMessageBox.information(
