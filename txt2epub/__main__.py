@@ -59,7 +59,8 @@ def main() -> int:
     convert_parser.add_argument(
         "-c",
         "--cover",
-        help="Cover of the book",
+        type=pathlib.Path,
+        help="Path to the cover image of the book",
     )
 
     subparsers.add_parser("gui", help="launch the GUI")
