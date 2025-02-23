@@ -4,7 +4,7 @@
 
 A simple tool for converting TXT books into ePub.
 
-![image](https://github.com/k4yt3x/txt2epub/assets/21986859/b342f068-28ff-4789-a261-1f82830f76a5)
+![Image](https://github.com/user-attachments/assets/836e0c03-5fb9-42ab-883c-2fd80f6c1cd3)
 
 ## Installation
 
@@ -21,7 +21,7 @@ pip install txt2epub
 You may convert a file from the command line:
 
 ```shell
-txt2epub convert -i <input> -o <output> -t <title> -a <author> -l <language>
+txt2epub convert -i <input> -o <output> -t <title> -a <author> -l <language> -c <cover>
 ```
 
 ...or using the GUI:

@@ -2,7 +2,7 @@
 
 一个简单的 TXT 到 ePub 转换工具。
 
-![image](https://github.com/k4yt3x/txt2epub/assets/21986859/b342f068-28ff-4789-a261-1f82830f76a5)
+![Image](https://github.com/user-attachments/assets/836e0c03-5fb9-42ab-883c-2fd80f6c1cd3)
 
 ## 安装
 
@@ -19,7 +19,7 @@ pip install txt2epub
 您可以直接在命令行里运行：
 
 ```shell
-txt2epub convert -i <输入文件> -o <输出文件> -t <书名> -a <作者> -l <语言>
+txt2epub convert -i <输入文件> -o <输出文件> -t <书名> -a <作者> -l <语言> -c <封面>
 ```
 
 ……或者运行图形化界面：
