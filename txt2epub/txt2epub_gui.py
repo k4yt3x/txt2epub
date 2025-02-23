@@ -97,6 +97,14 @@ class Txt2EpubGUI(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
+    def clear_fields(self):
+        self.file_path = None
+        self.title_input.clear()
+        self.language_input.clear()
+        self.author_input.clear()
+        self.cover_input.clear()
+        self.label.setText("Drop a file here or select a file using the button below")
+
     def select_file(self):
         file_path, _ = QFileDialog.getOpenFileName(
             self, "Select a text file", "", "Text Files (*.txt);;All Files (*)"
@@ -104,17 +112,25 @@ class Txt2EpubGUI(QMainWindow):
         self.on_select(file_path)
 
     def on_select(self, file: str):
-        file_path = pathlib.Path(file)
-        if file is not None and file_path.is_file():
-            self.file_path = pathlib.Path(file)
-            self.title_input.setText(self.file_path.stem)
-            with self.file_path.open("r", encoding="utf-8") as txt_file:
-                text = txt_file.read()
-                try:
-                    self.language_input.setText(langdetect.detect(text))
-                except langdetect.lang_detect_exception.LangDetectException:
-                    self.language_input.setText("en")
-            self.label.setText(f"Selected file: {self.file_path.name}")
+        try:
+            file_path = pathlib.Path(file)
+            if file is not None and file_path.is_file():
+                self.file_path = pathlib.Path(file)
+                with self.file_path.open("r", encoding="utf-8") as txt_file:
+                    try:
+                        text = txt_file.read()
+                        self.language_input.setText(langdetect.detect(text))
+                    except langdetect.lang_detect_exception.LangDetectException:
+                        self.language_input.setText("en")
+                self.title_input.setText(self.file_path.stem)
+                self.label.setText(f"Selected file: {self.file_path.name}")
+        except Exception as error:
+            self.clear_fields()
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"Error reading file: {error}",
+            )
 
     def generate_epub(self):
         if self.file_path:
