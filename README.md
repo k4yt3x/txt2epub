@@ -2,7 +2,7 @@
 
 [中文说明](README.zh.md)
 
-A simple tool for converting TXT books into ePub.
+A simple tool for converting TXT books into [EPUB](https://en.wikipedia.org/wiki/EPUB).
 
 ![Image](https://github.com/user-attachments/assets/836e0c03-5fb9-42ab-883c-2fd80f6c1cd3)
 

@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import pathlib
 import traceback
 
@@ -37,9 +35,10 @@ class Txt2EpubGUI(QMainWindow):
         self.setWindowTitle(self.title)
         self.setGeometry(100, 100, 400, 250)
 
-        QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(
-            QApplication.instance().quit
-        )
+        # Bind Ctrl+Q to quit the application
+        instance = QApplication.instance()
+        if instance is not None:
+            QShortcut(QKeySequence("Ctrl+Q"), self).activated.connect(instance.quit)
 
         layout = QVBoxLayout()
 
@@ -88,8 +87,8 @@ class Txt2EpubGUI(QMainWindow):
         select_file_button.clicked.connect(self.select_file)
         layout.addWidget(select_file_button)
 
-        generate_epub_button = QPushButton("Generate ePub", self)
-        generate_epub_button.setToolTip("Generate ePub from the selected text file")
+        generate_epub_button = QPushButton("Generate EPUB", self)
+        generate_epub_button.setToolTip("Generate EPUB from the selected text file")
         generate_epub_button.clicked.connect(self.generate_epub)
         layout.addWidget(generate_epub_button)
 
@@ -124,6 +123,14 @@ class Txt2EpubGUI(QMainWindow):
                         self.language_input.setText("en")
                 self.title_input.setText(self.file_path.stem)
                 self.label.setText(f"Selected file: {self.file_path.name}")
+        except UnicodeDecodeError:
+            self.clear_fields()
+            QMessageBox.critical(
+                self,
+                "Error",
+                "Unable to read file. "
+                "The file is not encoded in UTF-8 or contains invalid characters.",
+            )
         except Exception as error:
             self.clear_fields()
             QMessageBox.critical(
@@ -152,13 +159,15 @@ class Txt2EpubGUI(QMainWindow):
                     book_title=self.title_input.text() or "Default Title",
                     book_author=self.author_input.text() or "Unknown Author",
                     book_language=self.language_input.text() or "en",
-                    book_cover=pathlib.Path(self.cover_input.text()),
+                    book_cover=pathlib.Path(self.cover_input.text())
+                    if len(self.cover_input.text()) > 0
+                    else None,
                 )
-                self.label.setText(f"ePub generated for: {self.file_path.name}")
+                self.label.setText(f"EPUB generated for: {self.file_path.name}")
                 QMessageBox.information(
                     self,
                     "Success",
-                    f"ePub generated at: {self.file_path.with_suffix('.epub')}",
+                    f"EPUB generated at: {self.file_path.with_suffix('.epub')}",
                 )
 
             except Exception as error:
@@ -166,18 +175,19 @@ class Txt2EpubGUI(QMainWindow):
                 QMessageBox.critical(
                     self,
                     "Error",
-                    f"Error generating ePub: {error}",
+                    f"Error generating EPUB: {error}",
                 )
         else:
             self.label.setText(
                 "Drop a file here or select a file using the button below"
             )
 
-    # New functions to handle drag and drop
-    def dragEnterEvent(self, event: QDragEnterEvent):
-        if event.mimeData().hasUrls():
-            event.acceptProposedAction()
+    # New functions to handle drag and drop events
+    def dragEnterEvent(self, a0: QDragEnterEvent | None):
+        if a0 and (mime_data := a0.mimeData()) and mime_data.hasUrls():
+            a0.acceptProposedAction()
 
-    def dropEvent(self, event: QDropEvent):
-        url = event.mimeData().urls()[0].toLocalFile()
-        self.on_select(url)
+    def dropEvent(self, a0: QDropEvent | None):
+        if a0 and (mime_data := a0.mimeData()) and mime_data.hasUrls():
+            url = mime_data.urls()[0].toLocalFile()
+            self.on_select(url)

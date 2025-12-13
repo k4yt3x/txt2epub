@@ -1,6 +1,6 @@
 # TXT2EPUB
 
-一个简单的 TXT 到 ePub 转换工具。
+一个简单的 TXT 到 [EPUB](https://en.wikipedia.org/wiki/EPUB) 书籍转换工具。
 
 ![Image](https://github.com/user-attachments/assets/836e0c03-5fb9-42ab-883c-2fd80f6c1cd3)
 

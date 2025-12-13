@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import argparse
 import pathlib
 import sys
@@ -13,7 +11,7 @@ from .txt2epub_gui import Txt2EpubGUI
 def main() -> int:
     parser = argparse.ArgumentParser(
         prog="txt2epub",
-        description="TXT to ePub converter.",
+        description="TXT to EPUB converter.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
@@ -22,7 +20,7 @@ def main() -> int:
     )
 
     convert_parser = subparsers.add_parser(
-        "convert", help="Convert a TXT file to an ePub file"
+        "convert", help="Convert a TXT file to an EPUB file"
     )
     convert_parser.add_argument(
         "-i",
@@ -35,7 +33,7 @@ def main() -> int:
         "-o",
         "--output",
         type=pathlib.Path,
-        help="Path to the output ePub file",
+        help="Path to the output EPUB file",
     )
     convert_parser.add_argument(
         "-t",
