@@ -1,6 +1,6 @@
 [project]
 name = "txt2epub"
-description = "A simple TXT to ePub converter"
+description = "A simple TXT to EPUB converter"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "GPL-2.0-only" }
@@ -29,12 +29,12 @@ homepage = "https://github.com/k4yt3x/txt2epub/"
 [project.scripts]
 txt2epub = "txt2epub.__main__:main"
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "txt2epub/__init__.py"
+
 [tool.isort]
 profile = "black"
-
-[tool.pdm]
-version = { source = "file", path = "txt2epub/__init__.py" }
-
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"

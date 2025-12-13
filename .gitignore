@@ -1,7 +1,3 @@
-# PDM
-.pdm-python
-__pypackages__/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
