@@ -32,24 +32,7 @@ txt2epub gui
 
 ## Chapter Detection
 
-This program detects the book chapters and chapter titles following the standard TXT book format:
+The tool now detects chapters in two ways:
 
-- Chapters are separated by three new lines (i.e., `\n\n\n`)
-- The first line in a new chapter is the chapter's title.
-
-For example, in the text below, there are two chapters with titles "Chapter 1" and "Chapter 2."
-
-```txt
-Chapter 1
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at sapien ante.
-
-Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
-
-
-Chapter 2
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at sapien ante.
-
-Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
-```
+- Heading-based: lines that look like chapter titles are treated as chapter starts (e.g. `Chapter 3`, `CHAPTER V`, `Section 10`).
+- Fallback: if no headings are found, chapters are split by three new lines (`\n\n\n`), with the first line of each block used as the title.
