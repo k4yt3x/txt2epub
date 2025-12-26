@@ -4,8 +4,8 @@ import sys
 
 from PyQt6.QtWidgets import QApplication
 
+from .gui import Txt2EpubGUI
 from .txt2epub import Txt2Epub
-from .txt2epub_gui import Txt2EpubGUI
 
 
 def main() -> int:
@@ -35,25 +35,10 @@ def main() -> int:
         type=pathlib.Path,
         help="Path to the output EPUB file",
     )
-    convert_parser.add_argument(
-        "-t",
-        "--title",
-        help="Title of the book",
-    )
-    convert_parser.add_argument(
-        "-a",
-        "--author",
-        help="Author of the book",
-    )
-    convert_parser.add_argument(
-        "-l",
-        "--language",
-        help="Language of the book",
-    )
-    convert_parser.add_argument(
-        "--identifier",
-        help="Identifier of the book",
-    )
+    convert_parser.add_argument("-t", "--title", help="Title of the book")
+    convert_parser.add_argument("-a", "--author", help="Author of the book")
+    convert_parser.add_argument("-l", "--language", help="Language of the book")
+    convert_parser.add_argument("--identifier", help="Identifier of the book")
     convert_parser.add_argument(
         "-c",
         "--cover",
@@ -61,7 +46,7 @@ def main() -> int:
         help="Path to the cover image of the book",
     )
 
-    subparsers.add_parser("gui", help="launch the GUI")
+    subparsers.add_parser("gui", help="Launch the GUI")
 
     args = parser.parse_args()
 
@@ -76,7 +61,7 @@ def main() -> int:
             book_cover=args.cover,
         )
     elif args.command == "gui":
-        launch_gui()
+        return launch_gui()
     else:
         parser.print_help()
         return 1
@@ -84,11 +69,11 @@ def main() -> int:
     return 0
 
 
-def launch_gui():
+def launch_gui() -> int:
     app = QApplication(sys.argv)
-    ex = Txt2EpubGUI()
-    ex.show()
-    sys.exit(app.exec())
+    main_window = Txt2EpubGUI()
+    main_window.show()
+    return app.exec()
 
 
 if __name__ == "__main__":

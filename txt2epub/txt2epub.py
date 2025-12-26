@@ -1,6 +1,5 @@
 import pathlib
 import uuid
-from typing import Optional
 
 import langdetect
 from ebooklib import epub
@@ -12,46 +11,47 @@ class Txt2Epub:
     @staticmethod
     def create_epub(
         input_file: pathlib.Path,
-        output_file: Optional[pathlib.Path] = None,
-        book_identifier: Optional[str] = None,
-        book_title: Optional[str] = None,
-        book_author: Optional[str] = None,
-        book_language: Optional[str] = None,
-        book_cover: Optional[pathlib.Path] = None,
-    ):
-        # generate fields if not specified
+        output_file: pathlib.Path | None = None,
+        book_identifier: str | None = None,
+        book_title: str | None = None,
+        book_author: str | None = None,
+        book_language: str | None = None,
+        book_cover: pathlib.Path | None = None,
+    ) -> bool:
+        # Generate fields if not specified
         book_identifier = book_identifier or str(uuid.uuid4())
         book_title = book_title or input_file.stem
         book_author = book_author or "Unknown"
 
-        # read text from file
+        # Read text from file
         with input_file.open("r", encoding="utf-8") as txt_file:
             book_text = txt_file.read()
 
-            # detect book language if not specified
+        # Detect book language if not specified
+        if book_language is None:
             try:
-                book_language = book_language or langdetect.detect(book_text)
+                book_language = langdetect.detect(book_text)
             except langdetect.lang_detect_exception.LangDetectException:
                 book_language = "en"
 
-        # split text into chapters
+        # Split text into chapters
         chapters = book_text.split("\n\n\n")
 
-        # convert cover image to JPEG
+        # Convert cover image to JPEG
         book_cover_jpeg = None
-        if book_cover is not None and book_cover != "":
+        if book_cover is not None:
             book_cover_jpeg = convert_image_to_jpeg(book_cover)
 
-        # create new EPUB book
+        # Create new EPUB book
         book = epub.EpubBook()
 
-        # set book metadata
+        # Set book metadata
         book.set_identifier(book_identifier)
         book.set_title(book_title)
         book.add_author(book_author)
         book.set_language(book_language)
         book.set_cover("cover.jpg", book_cover_jpeg)
-        # create chapters
+        # Create chapters
         spine: list[str | epub.EpubHtml] = ["nav"]
         toc = []
         for chapter_id, chapter_content_full in enumerate(chapters):
@@ -59,7 +59,7 @@ class Txt2Epub:
             chapter_title = chapter_lines[0]
             chapter_content = chapter_lines[1:]
 
-            # write chapter title and contents
+            # Write chapter title and contents
             chapter = epub.EpubHtml(
                 title=chapter_title,
                 file_name="chap_{:02d}.xhtml".format(chapter_id + 1),
@@ -70,22 +70,22 @@ class Txt2Epub:
                 "".join("<p>{}</p>".format(line) for line in chapter_content),
             )
 
-            # add chapter to the book and TOC
+            # Add chapter to the book and TOC
             book.add_item(chapter)
             spine.append(chapter)
             toc.append(chapter)
 
-        # update book spine and TOC
+        # Update book spine and TOC
         book.spine = spine
         book.toc = toc
 
-        # add navigation files
+        # Add navigation files
         book.add_item(epub.EpubNcx())
         book.add_item(epub.EpubNav())
 
-        # generate new file path if not specified
+        # Generate new file path if not specified
         if output_file is None:
             output_file = input_file.with_suffix(".epub")
 
-        # create EPUB file
-        epub.write_epub(output_file, book)
+        # Create EPUB file
+        return epub.write_epub(output_file, book)

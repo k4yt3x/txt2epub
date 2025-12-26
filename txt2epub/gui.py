@@ -59,16 +59,7 @@ class Txt2EpubGUI(QMainWindow):
         self.cover_input = QLineEdit(self)
         self.cover_input.setPlaceholderText("Enter cover image path")
         self.cover_button = QPushButton("Select", self)
-        self.cover_button.clicked.connect(
-            lambda: self.cover_input.setText(
-                QFileDialog.getOpenFileName(
-                    self,
-                    "Select a cover image",
-                    "",
-                    "Images (*.png *.jpg *.jpeg);;All Files (*)",
-                )[0]
-            )
-        )
+        self.cover_button.clicked.connect(self.select_cover)
         cover_layout = QHBoxLayout()
         cover_layout.addWidget(self.cover_input)
         cover_layout.addWidget(self.cover_button)
@@ -96,6 +87,16 @@ class Txt2EpubGUI(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
+    def select_cover(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select a cover image",
+            "",
+            "Images (*.png *.jpg *.jpeg);;All Files (*)",
+        )
+        if file_path:
+            self.cover_input.setText(file_path)
+
     def clear_fields(self):
         self.file_path = None
         self.title_input.clear()
@@ -112,9 +113,11 @@ class Txt2EpubGUI(QMainWindow):
 
     def on_select(self, file: str):
         try:
+            if not file:
+                return
             file_path = pathlib.Path(file)
-            if file is not None and file_path.is_file():
-                self.file_path = pathlib.Path(file)
+            if file_path.is_file():
+                self.file_path = file_path
                 with self.file_path.open("r", encoding="utf-8") as txt_file:
                     try:
                         text = txt_file.read()
@@ -141,7 +144,7 @@ class Txt2EpubGUI(QMainWindow):
 
     def generate_epub(self):
         if self.file_path:
-            if self.file_path.with_suffix(".epub").is_file() is True:
+            if self.file_path.with_suffix(".epub").is_file():
                 reply = QMessageBox.question(
                     self,
                     "Overwrite?",
@@ -160,7 +163,7 @@ class Txt2EpubGUI(QMainWindow):
                     book_author=self.author_input.text() or "Unknown Author",
                     book_language=self.language_input.text() or "en",
                     book_cover=pathlib.Path(self.cover_input.text())
-                    if len(self.cover_input.text()) > 0
+                    if self.cover_input.text()
                     else None,
                 )
                 self.label.setText(f"EPUB generated for: {self.file_path.name}")
