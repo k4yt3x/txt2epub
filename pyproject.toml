@@ -2,7 +2,7 @@
 name = "txt2epub"
 description = "A simple TXT to EPUB converter"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = { text = "GPL-2.0-only" }
 keywords = [
   "ebook",

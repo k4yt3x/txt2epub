@@ -1,3 +1,4 @@
+import html
 import pathlib
 import uuid
 
@@ -34,8 +35,8 @@ class Txt2Epub:
             except langdetect.lang_detect_exception.LangDetectException:
                 book_language = "en"
 
-        # Split text into chapters
-        chapters = book_text.split("\n\n\n")
+        # Split text into chapters, filtering out empty chunks
+        chapters = [c for c in book_text.split("\n\n\n") if c.strip()]
 
         # Convert cover image to JPEG
         book_cover_jpeg = None
@@ -50,7 +51,8 @@ class Txt2Epub:
         book.set_title(book_title)
         book.add_author(book_author)
         book.set_language(book_language)
-        book.set_cover("cover.jpg", book_cover_jpeg)
+        if book_cover_jpeg is not None:
+            book.set_cover("cover.jpg", book_cover_jpeg)
         # Create chapters
         spine: list[str | epub.EpubHtml] = ["nav"]
         toc = []
@@ -66,8 +68,10 @@ class Txt2Epub:
                 lang=book_language,
             )
             chapter.content = "<h1>{}</h1>{}".format(
-                chapter_title,
-                "".join("<p>{}</p>".format(line) for line in chapter_content),
+                html.escape(chapter_title),
+                "".join(
+                    "<p>{}</p>".format(html.escape(line)) for line in chapter_content
+                ),
             )
 
             # Add chapter to the book and TOC
