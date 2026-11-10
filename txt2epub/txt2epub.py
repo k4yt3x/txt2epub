@@ -38,6 +38,9 @@ class Txt2Epub:
         # Split text into chapters, filtering out empty chunks
         chapters = [c for c in book_text.split("\n\n\n") if c.strip()]
 
+        if not chapters:
+            raise ValueError(f"Input file {input_file} contains no readable text")
+
         # Convert cover image to JPEG
         book_cover_jpeg = None
         if book_cover is not None:
